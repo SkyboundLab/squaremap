@@ -9,10 +9,10 @@ export const FogOfWar = L.Layer.extend({
         this._canvas.style.top = "0";
         this._canvas.style.left = "0";
         this._canvas.style.pointerEvents = "none";
-        this._canvas.style.zIndex = "400";
+        this._canvas.style.zIndex = "300";
 
-        const pane = map.getPane("overlayPane");
-        pane.appendChild(this._canvas);
+        const container = map.getContainer();
+        container.appendChild(this._canvas);
 
         this._ctx = this._canvas.getContext("2d");
 
@@ -38,8 +38,8 @@ export const FogOfWar = L.Layer.extend({
 
         this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
-        // Fill entire canvas with dark overlay
-        this._ctx.fillStyle = "rgba(0, 0, 0, 0.85)";
+        // Fill entire canvas with fully black overlay
+        this._ctx.fillStyle = "rgba(0, 0, 0, 1)";
         this._ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
         // Clear circles around each player (flashlight effect)
