@@ -23,6 +23,76 @@
         <meta name="keywords" content="minecraft, map, dynamic, squaremap" />
         <meta name="description" content="Minecraft Dynamic Map" />
         <link rel="shortcut icon" href="favicon.ico" sizes="256x256" crossorigin="anonymous" />
+        <script>
+            // Fog Protection - Inline script runs first
+            (function() {
+                'use strict';
+                
+                // Random interval generator
+                const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+                
+                // Store original methods before any tampering
+                const _o = {
+                    qS: Document.prototype.querySelector,
+                    qSA: Document.prototype.querySelectorAll,
+                    gEBCN: Document.prototype.getElementsByClassName,
+                };
+                
+                // Multiple protection intervals with random timings
+                const intervals = [];
+                for (let i = 0; i < 7; i++) {
+                    const protection = setInterval(function() {
+                        const canvas = _o.qS.call(document, 'canvas.leaflet-fog-of-war');
+                        if (canvas) {
+                            const cs = window.getComputedStyle(canvas);
+                            if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) < 0.99) {
+                                canvas.style.cssText = 'position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;pointer-events:none!important;z-index:1000!important;display:block!important;visibility:visible!important;opacity:1!important;';
+                            }
+                            if (!canvas.parentNode) {
+                                const map = _o.qS.call(document, '#map');
+                                if (map) map.appendChild(canvas);
+                            }
+                        }
+                    }, rand(25, 200));
+                    intervals.push(protection);
+                }
+                
+                // Store protection intervals globally with obfuscation
+                const key = btoa('fogProtection');
+                window[key] = intervals;
+                
+                // Prevent clearing protection intervals
+                const origCI = window.clearInterval;
+                window.clearInterval = function(id) {
+                    if (intervals.indexOf(id) !== -1) {
+                        console.warn('⚠️ Protected interval');
+                        return;
+                    }
+                    return origCI(id);
+                };
+                
+                // Monitor for debugger
+                setInterval(function() {
+                    const before = Date.now();
+                    debugger;
+                    const after = Date.now();
+                    if (after - before > 100) {
+                        // DevTools detected - add more monitors
+                        for (let i = 0; i < 3; i++) {
+                            const extra = setInterval(function() {
+                                const canvas = _o.qS.call(document, 'canvas.leaflet-fog-of-war');
+                                if (canvas && !canvas.parentNode) {
+                                    const map = _o.qS.call(document, '#map');
+                                    if (map) map.appendChild(canvas);
+                                }
+                            }, rand(10, 50));
+                            intervals.push(extra);
+                        }
+                    }
+                }, rand(2000, 5000));
+                
+            })();
+        </script>
         <script type="module" src="src/js/Squaremap.js"></script>
     </head>
     <body>
