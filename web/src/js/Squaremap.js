@@ -4,6 +4,7 @@ import { WorldList } from "./WorldList.js";
 import { UICoordinates } from "./UICoordinates.js";
 import { UILink } from "./UILink.js";
 import { LayerControl } from "./LayerControl.js";
+import { FogOfWar } from "./FogOfWar.js";
 import L from "leaflet";
 import "./addons/Ellipse.js";
 import "./addons/RotateMarker.js";
@@ -33,6 +34,8 @@ class SquaremapMap {
     tick_count;
     /** @type {boolean} */
     showControls;
+    /** @type {FogOfWar} */
+    fogOfWar;
 
     constructor() {
         this.map = L.map("map", {
@@ -58,6 +61,8 @@ class SquaremapMap {
         this.tick_count = 1;
 
         this.layerControl = new LayerControl();
+        this.fogOfWar = new FogOfWar();
+        this.fogOfWar.addTo(this.map);
 
         this.init();
     }
@@ -73,6 +78,10 @@ class SquaremapMap {
         this.playerList.tick();
         // tick world
         this.worldList.curWorld.tick();
+        // update fog of war
+        if (this.fogOfWar) {
+            this.fogOfWar._update();
+        }
     }
     init() {
         this.getJSON(
