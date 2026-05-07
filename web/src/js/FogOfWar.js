@@ -47,7 +47,10 @@ export const FogOfWar = L.Layer.extend({
         // Clear circles around each player (flashlight effect)
         this._ctx.globalCompositeOperation = "destination-out";
 
-        const radius = 80; // pixels - adjust for flashlight size
+        // Scale radius based on zoom level
+        const zoom = this._map.getZoom();
+        const baseRadius = 80; // base radius at zoom level 0
+        const radius = baseRadius * Math.pow(2, zoom);
 
         if (S.playerList.markers) {
             S.playerList.markers.forEach((marker, uuid) => {
