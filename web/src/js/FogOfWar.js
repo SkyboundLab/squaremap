@@ -8,38 +8,40 @@ export const FogOfWar = L.Layer.extend({
         this._canvas.style.position = "absolute";
         this._canvas.style.top = "0";
         this._canvas.style.left = "0";
+        this._canvas.style.width = "100%";
+        this._canvas.style.height = "100%";
         this._canvas.style.pointerEvents = "none";
-        this._canvas.style.zIndex = "300";
+        this._canvas.style.zIndex = "1000";
 
         const container = map.getContainer();
         container.appendChild(this._canvas);
 
         this._ctx = this._canvas.getContext("2d");
 
-        map.on("moveend resize zoomend", this._update, this);
-        map.on("viewreset", this._update, this);
+        map.on("moveend resize zoomend zoom", this._update, this);
+        map.on("viewreset move", this._update, this);
 
         this._update();
     },
 
     onRemove: function (map) {
         L.DomUtil.remove(this._canvas);
-        map.off("moveend resize zoomend viewreset", this._update, this);
+        map.off("moveend resize zoomend zoom viewreset move", this._update, this);
     },
 
     _update: function () {
-        if (!this._map || !S.playerList) return;
+        if (!this._map || !this._canvas || !S.playerList) return;
 
         const size = this._map.getSize();
+        
+        // Set canvas resolution (internal size)
         this._canvas.width = size.x;
         this._canvas.height = size.y;
-        this._canvas.style.width = size.x + "px";
-        this._canvas.style.height = size.y + "px";
 
         this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
         // Fill entire canvas with fully black overlay
-        this._ctx.fillStyle = "rgba(0, 0, 0, 1)";
+        this._ctx.fillStyle = "rgb(0, 0, 0)";
         this._ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
         // Clear circles around each player (flashlight effect)
