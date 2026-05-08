@@ -11,7 +11,7 @@ export const FogOfWar = L.Layer.extend({
         this._canvas.style.width = "100%";
         this._canvas.style.height = "100%";
         this._canvas.style.pointerEvents = "none";
-        this._canvas.style.zIndex = "1000";
+        this._canvas.style.zIndex = "400";
 
         const container = map.getContainer();
         container.appendChild(this._canvas);
