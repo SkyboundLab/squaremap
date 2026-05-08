@@ -5,8 +5,6 @@ import { UICoordinates } from "./UICoordinates.js";
 import { UILink } from "./UILink.js";
 import { LayerControl } from "./LayerControl.js";
 import { FogOfWar } from "./FogOfWar.js";
-import "./FogProtection.js";
-import "./FogProtectionLayer2.js";
 import L from "leaflet";
 import "./addons/Ellipse.js";
 import "./addons/RotateMarker.js";
@@ -66,15 +64,6 @@ class SquaremapMap {
         this.fogOfWar = new FogOfWar();
         this.fogOfWar.addTo(this.map);
 
-        // Protection: Monitor fog of war on animation frame
-        const monitorFog = () => {
-            if (this.fogOfWar && this.map && !this.map.hasLayer(this.fogOfWar)) {
-                this.fogOfWar.addTo(this.map);
-            }
-            requestAnimationFrame(monitorFog);
-        };
-        requestAnimationFrame(monitorFog);
-
         this.init();
     }
     loop() {
@@ -82,31 +71,9 @@ class SquaremapMap {
             this.tick();
             this.tick_count++;
         }
-        
-        // Protection: Ensure fog of war is always present (multiple checks)
-        if (this.fogOfWar && this.map) {
-            if (!this.map.hasLayer(this.fogOfWar)) {
-                this.fogOfWar.addTo(this.map);
-            }
-            // Additional check: ensure canvas exists
-            const canvas = document.querySelector('canvas.leaflet-fog-of-war');
-            if (!canvas) {
-                this.fogOfWar._restoreCanvas();
-            } else if (!canvas.parentNode) {
-                this.map.getContainer().appendChild(canvas);
-            }
-        }
-        
         setTimeout(() => this.loop(), 1000);
     }
     tick() {
-        // Random protection checks during tick
-        if (Math.random() < 0.3) { // 30% chance each tick
-            if (this.fogOfWar && this.map && !this.map.hasLayer(this.fogOfWar)) {
-                this.fogOfWar.addTo(this.map);
-            }
-        }
-        
         // tick player tracker
         this.playerList.tick();
         // tick world
@@ -245,9 +212,6 @@ class SquaremapMap {
 }
 
 export const S = new SquaremapMap();
-
-// Expose globally for protection scripts
-window.S = S;
 
 // https://stackoverflow.com/a/3955096
 Array.prototype.remove = function () {

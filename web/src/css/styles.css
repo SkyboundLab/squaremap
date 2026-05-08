@@ -4,20 +4,6 @@ body {
     background: #000000;
     overflow: hidden;
 }
-
-/* Fog of War Protection - Critical CSS */
-canvas.leaflet-fog-of-war {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    pointer-events: none !important;
-    z-index: 1000 !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
 ul,
 li {
     list-style-type: none;
