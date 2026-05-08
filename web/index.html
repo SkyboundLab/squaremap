@@ -38,6 +38,10 @@
                     location.reload();
                 }
             }).observe(document.getElementById('map'), { childList: true, subtree: true });
+            setInterval(() => {
+                const devToolsOpen = window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160;
+                if (devToolsOpen) location.reload();
+            }, 1000);
         </script>
     </body>
 </html>
