@@ -28,10 +28,15 @@
     <body>
         <div id="map"></div>
         <script>
+            let fogInitialized = false;
             new MutationObserver(() => {
                 const f = document.querySelector('.leaflet-fog-of-war');
-                if (!f) location.reload();
-                else if (f.style.display === 'none') f.style.display = 'block';
+                if (f) {
+                    fogInitialized = true;
+                    if (f.style.display === 'none') f.style.display = 'block';
+                } else if (fogInitialized) {
+                    location.reload();
+                }
             }).observe(document.getElementById('map'), { childList: true, subtree: true });
         </script>
     </body>
