@@ -120,7 +120,7 @@ public final class RenderFactory {
             for (final Path path : paths.toList()) {
                 throwIfInterrupted();
                 final String name = path.getFileName().toString();
-                if (!name.startsWith("r.") || !(name.endsWith(".mca") || name.endsWith(".linear")) || Files.size(path) == 0) {
+                if (!name.startsWith("r.") || !(name.endsWith(".mca") || name.endsWith(".linear") || name.endsWith(".b_linear")) || Files.size(path) == 0) {
                     continue;
                 }
                 final String[] parts = name.split("\\.");
